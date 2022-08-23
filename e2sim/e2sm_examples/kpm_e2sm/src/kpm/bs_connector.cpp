@@ -51,7 +51,7 @@ void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id,
     requestorId, instanceId, ranFunctionId, actionId, timer[0]);
 
   char* payload = NULL;
-  // E2AP_PDU *e2ap_pdu = (E2AP_PDU*)calloc(1,sizeof(E2AP_PDU));
+  E2AP_PDU *e2ap_pdu = (E2AP_PDU*)calloc(1,sizeof(E2AP_PDU));
   
   if (DEBUG) {
     fprintf(stderr, "DEBUG mode\n");
@@ -65,12 +65,12 @@ void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id,
   if (payload) {
     fprintf(stderr, "Sending\n%s\n", payload);
     fprintf(stderr, "Encoding RIC Indication Report\n");
-    // encoding::generate_e2apv1_indication_report(e2ap_pdu, payload, strlen(payload), ric_req_id[0], 0, 0, 0);
-    // fprintf(stderr, "RIC Indication Report successfully encoded\n");
-    // e2sim->encode_and_send_sctp_data(e2ap_pdu);
+    encoding::generate_e2apv1_indication_report(e2ap_pdu, payload, strlen(payload), ric_req_id[0], 0, 0, 0);
+    fprintf(stderr, "RIC Indication Report successfully encoded\n");
+    e2sim->encode_and_send_sctp_data(e2ap_pdu);
 
     // ASN.1 encode payload and header
-    encode_and_send_ric_indication_report_metrics_buffer(payload, seqNum, requestorId, instanceId, ranFunctionId, actionId);
+    // encode_and_send_ric_indication_report_metrics_buffer(payload, seqNum, requestorId, instanceId, ranFunctionId, actionId);
     seqNum++;
   }
   
