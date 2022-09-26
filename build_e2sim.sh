@@ -1,9 +1,11 @@
 #!/bin/bash
 
 ## dependencies
-set -x
+#set -x
 
 root_folder=$(pwd)
+
+cmake_build_type="Release"
 
 function build_json_from_source(){
 git submodule init && git submodule update
@@ -41,6 +43,7 @@ echo "Usage:"
 echo "-h: print this message"
 echo "-i: install required dependencies"
 echo "-c: clean build files"
+echo "-g: debug build"
 exit 1
 }
 
@@ -57,6 +60,9 @@ until [ -z "$1" ]
        -c)
 	    clean_build
 	    shift;;
+       -g)
+         cmake_build_type="Debug"
+         shift;;
         *)
            print_help
 	   break;;
@@ -74,7 +80,7 @@ DEBUG=0
 rm -Rf build
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=cmake_build_type ..
 make -j ${nproc} package
 cmake .. -DDEV_PKG=1
 make -j ${nproc} package
@@ -99,6 +105,6 @@ cd ${CURR_DIR}/e2sm_examples/kpm_e2sm/
 rm -Rf build
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=cmake_build_type ..
 make -j ${nproc}
 
