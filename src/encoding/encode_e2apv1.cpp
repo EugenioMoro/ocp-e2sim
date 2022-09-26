@@ -179,6 +179,8 @@ void encoding::generate_e2apv1_setup_request_parameterized(E2AP_PDU_t *e2ap_pdu,
     memcpy(gnb_bstring->buf, (uint8_t*) gnb_id, gnb_bstring->size);
   }
 
+                                                     
+
   gnb_bstring->bits_unused = 8 - gnb_bstring->size;
   if (gnb_bstring->bits_unused < 0) {
     gnb_bstring->bits_unused = 0;

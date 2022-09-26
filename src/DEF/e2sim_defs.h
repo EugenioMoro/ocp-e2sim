@@ -25,9 +25,9 @@
 #include <stdlib.h>
 
 #define VERSION             "1.2.0"      //May 2019
-#define DEFAULT_SCTP_IP     "127.0.0.1"
+#define DEFAULT_SCTP_IP     "10.0.2.10"
 #define X2AP_PPID           (452984832) //27 = 1b, PPID = 1b000000(hex) -> 452984832(dec)
-#define X2AP_SCTP_PORT      36421
+#define X2AP_SCTP_PORT      36422
 #define RIC_SCTP_SRC_PORT   36422
 #define MAX_SCTP_BUFFER     10000
 #define WORKDIR_ENV         "E2SIM_DIR" //environment variable
