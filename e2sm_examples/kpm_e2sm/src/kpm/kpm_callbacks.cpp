@@ -373,8 +373,8 @@ void run_report_loop(long requestorId, long instanceId, long ranFunctionId, long
 					E2SM_KPM_IndicationHeader_t* ind_header_cucp_ue =
 					(E2SM_KPM_IndicationHeader_t*)calloc(1,sizeof(E2SM_KPM_IndicationHeader_t));
 					encode_e2sm_kpm_indication_header(ind_header_cucp_ue, plmnid_buf, sst_buf, sd_buf, fqival, qcival, nrcellid_buf, gnbid_buf, 0, cuupid_buf, duid_buf, cuupname_buf);
-					fprintf(stderr, "Now printing xer outside of function call\n");
-					xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationHeader, ind_header_cucp_ue);	  
+					//fprintf(stderr, "Now printing xer outside of function call\n");
+					//xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationHeader, ind_header_cucp_ue);	  
 
 					uint8_t e2sm_header_buf_cucp_ue[8192] = {0, };
 					size_t e2sm_header_buf_size_cucp_ue = 8192;
@@ -859,8 +859,8 @@ void encode_and_send_ric_indication_report_metrics_buffer(char* payload, long se
 	fprintf(stderr, "after encoding message\n");
 
 	encode_e2sm_kpm_indication_header(ind_header_cucp_ue, plmnid_buf, sst_buf, sd_buf, fqival, qcival, nrcellid_buf, gnbid_buf, 0, cuupid_buf, duid_buf, cuupname_buf);
-	fprintf(stderr, "Now printing xer outside of function call\n");
-	xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationHeader, ind_header_cucp_ue);   
+	//fprintf(stderr, "Now printing xer outside of function call\n");
+	//xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationHeader, ind_header_cucp_ue);   
 
 	uint8_t e2sm_header_buf_cucp_ue[8192] = {0, };
 	size_t e2sm_header_buf_size_cucp_ue = 8192;
@@ -921,7 +921,7 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 		RICsubscriptionRequest_IEs_t *next_ie = ies[i];
 		pres = next_ie->value.present; 
 
-		fprintf(stderr, "The next present value %d\n", pres);
+		//fprintf(stderr, "The next present value %d\n", pres);
 
 		switch(pres) {
 			case RICsubscriptionRequest_IEs__value_PR_RICrequestID:
@@ -1146,7 +1146,7 @@ void callback_kpm_control(E2AP_PDU_t *control_pdu) {
 					(void **) &e2smControlHeader, ie->value.choice.RICcontrolHeader.buf,
 					ie->value.choice.RICcontrolHeader.size);
 
-				xer_fprint(stderr, &asn_DEF_E2SM_HelloWorld_ControlHeader, e2smControlHeader);
+				//xer_fprint(stderr, &asn_DEF_E2SM_HelloWorld_ControlHeader, e2smControlHeader);
 
 				if (e2smControlHeader->present == E2SM_HelloWorld_ControlHeader_PR_controlHeader_Format1) {
 					E2SM_HelloWorld_ControlHeader_Format1_t* m_e2SmRcControlHeaderFormat1 = e2smControlHeader->choice.controlHeader_Format1;
@@ -1178,7 +1178,7 @@ void callback_kpm_control(E2AP_PDU_t *control_pdu) {
 					(void **) &e2SmControlMessage, ie->value.choice.RICcontrolMessage.buf,
 					ie->value.choice.RICcontrolMessage.size);
 
-				xer_fprint(stderr, &asn_DEF_E2SM_HelloWorld_ControlMessage, e2SmControlMessage);
+				//xer_fprint(stderr, &asn_DEF_E2SM_HelloWorld_ControlMessage, e2SmControlMessage);
 
 				// get payload
 				if (e2SmControlMessage->present == E2SM_HelloWorld_ControlMessage_PR_controlMessage_Format1)

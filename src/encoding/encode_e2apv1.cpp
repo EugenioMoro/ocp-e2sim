@@ -70,8 +70,8 @@ long encoding::get_function_id_from_subscription(E2AP_PDU_t *e2ap_pdu) {
   
   RICsubscriptionRequest_IEs_t **ies = (RICsubscriptionRequest_IEs_t**)orig_req.protocolIEs.list.array;
 
-  fprintf(stderr, "count%d\n", count);
-  fprintf(stderr, "size%d\n", size);
+  //fprintf(stderr, "count%d\n", count);
+  //fprintf(stderr, "size%d\n", size);
 
   RICsubscriptionRequest_IEs__value_PR pres;
 
@@ -81,17 +81,17 @@ long encoding::get_function_id_from_subscription(E2AP_PDU_t *e2ap_pdu) {
     RICsubscriptionRequest_IEs_t *next_ie = ies[i];
     pres = next_ie->value.present;
     
-    fprintf(stderr, "next present value %d\n", pres);
-    fprintf(stderr, "value of pres ranfuncid is %d\n", RICsubscriptionRequest_IEs__value_PR_RANfunctionID);
+    //fprintf(stderr, "next present value %d\n", pres);
+    //fprintf(stderr, "value of pres ranfuncid is %d\n", RICsubscriptionRequest_IEs__value_PR_RANfunctionID);
 
     if (pres == RICsubscriptionRequest_IEs__value_PR_RANfunctionID) {
-      fprintf(stderr, "equal pres to ranfuncid\n");
+      //fprintf(stderr, "equal pres to ranfuncid\n");
       func_id = next_ie->value.choice.RANfunctionID;
     }
     
   }
 
-  fprintf(stderr, "After loop, func_id is %ld\n", func_id);
+  //fprintf(stderr, "After loop, func_id is %ld\n", func_id);
 
   return func_id;  
 
@@ -593,7 +593,7 @@ void encoding::generate_e2apv1_subscription_response_success(E2AP_PDU *e2ap_pdu,
 
   
   for (int i=0; i < numAccept ; i++) {
-    fprintf(stderr, "in for loop i = %d\n", i);
+    //fprintf(stderr, "in for loop i = %d\n", i);
 
     long aid = reqActionIdsAccepted[i];
 
@@ -626,7 +626,7 @@ void encoding::generate_e2apv1_subscription_response_success(E2AP_PDU *e2ap_pdu,
     ricactionadmitted->value.choice.RICaction_NotAdmitted_List = *rejectlist;
     
     for (int i=0; i < numReject; i++) {
-      fprintf(stderr, "in for loop i = %d\n", i);
+      //fprintf(stderr, "in for loop i = %d\n", i);
       
       long aid = reqActionIdsRejected[i];
       
@@ -664,9 +664,9 @@ void encoding::generate_e2apv1_subscription_response_success(E2AP_PDU *e2ap_pdu,
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  printf("now printing xer of subscription response\n");
-  xer_fprint(stderr, &asn_DEF_E2AP_PDU, e2ap_pdu);
-  printf("done printing xer of subscription response\n");  
+  //printf("now printing xer of subscription response\n");
+  //xer_fprint(stderr, &asn_DEF_E2AP_PDU, e2ap_pdu);
+  //printf("done printing xer of subscription response\n");  
 
   
 }
@@ -778,7 +778,7 @@ void encoding::generate_e2apv1_subscription_response(E2AP_PDU *e2ap_pdu, E2AP_PD
   ricactionadmitted->value.choice.RICaction_Admitted_List = *admlist;
 
   for (int i=0; i < actionIds.size(); i++) {
-    fprintf(stderr, "in for loop i = %d\n", i);
+    //fprintf(stderr, "in for loop i = %d\n", i);
 
     long aid = actionIds.at(i);
 
@@ -987,7 +987,7 @@ void encoding::generate_e2apv1_indication_request_parameterized(E2AP_PDU *e2ap_p
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2AP_PDU, e2ap_pdu);  
+  //xer_fprint(stderr, &asn_DEF_E2AP_PDU, e2ap_pdu);  
 
 }
 
@@ -1028,7 +1028,7 @@ void encoding::generate_e2apv1_indication_report(E2AP_PDU *e2ap_pdu, char* paylo
     }
   
     /* Prints the Msg formed */
-    xer_fprint(stderr, &asn_DEF_E2AP_PDU, e2ap_pdu);
+    //xer_fprint(stderr, &asn_DEF_E2AP_PDU, e2ap_pdu);
     // memset((uint8_t *)encBuf, 0, ENC_BUF_MAX_LEN);
     // encBufSize = 0;
     // encRetVal = aper_encode(&asn_DEF_E2AP_PDU, 0, e2ap_pdu, PrepFinalEncBuf, encBuf);

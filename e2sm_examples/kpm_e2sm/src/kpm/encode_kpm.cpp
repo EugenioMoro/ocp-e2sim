@@ -167,7 +167,7 @@ void encode_kpm_function_description(E2SM_KPM_RANfunction_Description_t* ranfunc
   ASN_SEQUENCE_ADD(&ranfunc_desc->e2SM_KPM_RANfunction_Item.ric_ReportStyle_List->list, report_style5);
   ASN_SEQUENCE_ADD(&ranfunc_desc->e2SM_KPM_RANfunction_Item.ric_ReportStyle_List->list, report_style6);
 
-  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_RANfunction_Description, ranfunc_desc);
+  ////xer_fprint(stderr, &asn_DEF_E2SM_KPM_RANfunction_Description, ranfunc_desc);
 
 }
 
@@ -310,7 +310,7 @@ void encode_e2sm_kpm_indication_header(E2SM_KPM_IndicationHeader_t *ihead, uint8
   ihead->choice.indicationHeader_Format1 = *ind_header;
   if (ind_header) free(ind_header);
   
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationHeader, ihead);
+  ////xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationHeader, ihead);
   
 }
 
@@ -329,7 +329,7 @@ void encode_kpm_ocuup_user_level(RAN_Container_t *ranco,
   ts->size = strlen((char*)buf);
   memcpy(ts->buf,buf,ts->size);
 
-  printf("enc1\n");
+  ////printf("enc1\n");
 
   CU_UP_Usage_Report_CellResourceReportItem_t  *report_item =
     (CU_UP_Usage_Report_CellResourceReportItem_t*)calloc(1,sizeof(CU_UP_Usage_Report_CellResourceReportItem_t));
@@ -341,7 +341,7 @@ void encode_kpm_ocuup_user_level(RAN_Container_t *ranco,
   plmnidstr->size = 3;
   memcpy(plmnidstr->buf, plmnid_buf, plmnidstr->size);
 
-  printf("enc2\n");  
+  ////printf("enc2\n");  
 
   NRCellIdentity_t *nrcellid = (NRCellIdentity_t*)calloc(1,sizeof(NRCellIdentity_t));
   //  uint8_t* buf3 = (uint8_t*)"12340";
@@ -356,7 +356,7 @@ void encode_kpm_ocuup_user_level(RAN_Container_t *ranco,
   if (plmnidstr) free(plmnidstr);
   if (nrcellid) free(nrcellid);
  
-  printf("enc3\n");
+  //printf("enc3\n");
   
   report_item->nRCGI = *nrcgi;
   if (nrcgi) free(nrcgi);
@@ -364,20 +364,20 @@ void encode_kpm_ocuup_user_level(RAN_Container_t *ranco,
   CU_UP_Usage_Report_UeResourceReportItem *ue_report_item =
     (CU_UP_Usage_Report_UeResourceReportItem*)calloc(1,sizeof(CU_UP_Usage_Report_UeResourceReportItem));
 
-  printf("enc3.2\n");   
+  //printf("enc3.2\n");   
   
   //  uint8_t* crnti_str = (uint8_t*)"1111";
   OCTET_STRING *crnti = (OCTET_STRING*)calloc(1,sizeof(OCTET_STRING));
   crnti->buf = (uint8_t*)calloc(1,4);
   
-  printf("enc3.3\n");
+  //printf("enc3.3\n");
   
   crnti->size = strlen((char*)crnti_buf);
 
-  printf("enc3.4\n");
+  //printf("enc3.4\n");
   memcpy(crnti->buf, crnti_buf, crnti->size);
 
-  printf("enc4\n");
+  //printf("enc4\n");
 
   INTEGER_t *bytesdl = (INTEGER_t*)calloc(1, sizeof(INTEGER_t));
   int array_size_dl;
@@ -486,7 +486,7 @@ void encode_kpm_ocuup_user_level(RAN_Container_t *ranco,
   ASN_SEQUENCE_ADD(&ranco->reportContainer.choice.oCU_UP_UE.cellResourceReportList.list, report_item);
   if (ts) free(ts);
 
-  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  ////xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
 
 }
 
@@ -502,7 +502,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco,
   ts->size = strlen((char*)buf);
   memcpy(ts->buf,buf,ts->size);
 
-  printf("enc1\n");
+  //printf("enc1\n");
 
   CU_CP_Usage_Report_CellResourceReportItem_t  *report_item =
     (CU_CP_Usage_Report_CellResourceReportItem_t*)calloc(1,sizeof(CU_CP_Usage_Report_CellResourceReportItem_t));
@@ -513,7 +513,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco,
   plmnidstr->size = plmnid_size;
   memcpy(plmnidstr->buf, plmnid_buf, plmnidstr->size);
 
-  printf("enc2\n");
+  //printf("enc2\n");
 
   NRCellIdentity_t *nrcellid = (NRCellIdentity_t*)calloc(1,sizeof(NRCellIdentity_t));
 
@@ -530,7 +530,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco,
   if (plmnidstr) free(plmnidstr);
   if (nrcellid) free(nrcellid);
  
-  printf("enc3\n");
+  //printf("enc3\n");
   
   report_item->nRCGI = *nrcgi;
   if (nrcgi) free(nrcgi);
@@ -538,18 +538,18 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco,
   CU_CP_Usage_Report_UeResourceReportItem *ue_report_item =
     (CU_CP_Usage_Report_UeResourceReportItem*)calloc(1,sizeof(CU_CP_Usage_Report_UeResourceReportItem));
 
-  printf("enc3.2\n");
+  //printf("enc3.2\n");
 
 
   int crnti_size = strlen((char*)crnti_buf);
   OCTET_STRING *crnti = (OCTET_STRING*)calloc(1,sizeof(OCTET_STRING));
   crnti->buf = (uint8_t*)calloc(1, crnti_size);
   
-  printf("enc3.3\n");
+  //printf("enc3.3\n");
   
   crnti->size = strlen((char*)crnti_buf);
 
-  printf("enc3.4\n");
+  //printf("enc3.4\n");
   memcpy(crnti->buf, crnti_buf, crnti->size);
 
   //  uint8_t *buf_serving = (uint8_t*)"RSRP10";
@@ -588,7 +588,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco,
   
   if (ts) free(ts);
 
-  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
 }
 
 void encode_kpm_ocucp_user_level(RAN_Container_t *ranco) {
@@ -599,7 +599,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco) {
   ts->size = strlen((char*)buf);
   memcpy(ts->buf,buf,ts->size);
 
-  printf("enc1\n");
+  //printf("enc1\n");
 
   CU_CP_Usage_Report_CellResourceReportItem_t  *report_item =
     (CU_CP_Usage_Report_CellResourceReportItem_t*)calloc(1,sizeof(CU_CP_Usage_Report_CellResourceReportItem_t));
@@ -611,7 +611,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco) {
   plmnidstr->size = 3;
   memcpy(plmnidstr->buf, buf2, plmnidstr->size);
 
-  printf("enc2\n");
+  //printf("enc2\n");
 
   NRCellIdentity_t *nrcellid = (NRCellIdentity_t*)calloc(1,sizeof(NRCellIdentity_t));
   uint8_t* buf3 = (uint8_t*)"12340";
@@ -624,7 +624,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco) {
   nrcgi->pLMN_Identity = *plmnidstr;
   nrcgi->nRCellIdentity = *nrcellid;
  
-  printf("enc3\n");
+  //printf("enc3\n");
   
   report_item->nRCGI = *nrcgi;
   if (nrcgi) free(nrcgi);
@@ -632,17 +632,17 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco) {
   CU_CP_Usage_Report_UeResourceReportItem *ue_report_item =
     (CU_CP_Usage_Report_UeResourceReportItem*)calloc(1,sizeof(CU_CP_Usage_Report_UeResourceReportItem));
 
-  printf("enc3.2\n");
+  //printf("enc3.2\n");
 
   uint8_t* crnti_str = (uint8_t*)"1111";
   OCTET_STRING *crnti = (OCTET_STRING*)calloc(1,sizeof(OCTET_STRING));
   crnti->buf = (uint8_t*)calloc(1,4);
   
-  printf("enc3.3\n");
+  //printf("enc3.3\n");
   
   crnti->size = strlen((char*)crnti_str);
 
-  printf("enc3.4\n");
+  //printf("enc3.4\n");
   memcpy(crnti->buf, crnti_str, crnti->size);
 
   uint8_t *buf_serving = (uint8_t*)"RSRP10";
@@ -668,7 +668,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco) {
   ranco->reportContainer.present = RAN_Container__reportContainer_PR_oCU_CP_UE;
   ASN_SEQUENCE_ADD(&ranco->reportContainer.choice.oCU_CP_UE.cellResourceReportList.list, report_item);
 
-  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
 
 }
 
@@ -686,7 +686,7 @@ void encode_kpm_odu_user_level(RAN_Container_t *ranco,
   ts->size = strlen((char*)buf);
   memcpy(ts->buf,buf,ts->size);
 
-  printf("enc1\n");
+  //printf("enc1\n");
 
   DU_Usage_Report_CellResourceReportItem_t *report_item =
     (DU_Usage_Report_CellResourceReportItem_t*)calloc(1,sizeof(DU_Usage_Report_CellResourceReportItem_t));
@@ -699,7 +699,7 @@ void encode_kpm_odu_user_level(RAN_Container_t *ranco,
   plmnidstr->size = plmnid_size;
   memcpy(plmnidstr->buf, plmnid_buf, plmnidstr->size);
 
-  printf("enc2\n");  
+  //printf("enc2\n");  
 
   NRCellIdentity_t *nrcellid = (NRCellIdentity_t*)calloc(1,sizeof(NRCellIdentity_t));
 
@@ -716,31 +716,31 @@ void encode_kpm_odu_user_level(RAN_Container_t *ranco,
   if (plmnidstr) free(plmnidstr);
   if (nrcellid) free(nrcellid);
  
-  printf("enc3\n"); 
+  //printf("enc3\n"); 
   
   report_item->nRCGI = *nrcgi;
   if (nrcgi) free(nrcgi);
 
-  printf("enc3.1\n");   
+  //printf("enc3.1\n");   
 
   DU_Usage_Report_UeResourceReportItem *ue_report_item =
     (DU_Usage_Report_UeResourceReportItem*)calloc(1,sizeof(DU_Usage_Report_UeResourceReportItem));
 
-  printf("enc3.2\n");   
+  //printf("enc3.2\n");   
 
   int crnti_size = strlen((char*)crnti_buf);
 
   OCTET_STRING *crnti = (OCTET_STRING*)calloc(1,sizeof(OCTET_STRING));
   crnti->buf = (uint8_t*)calloc(1,crnti_size);
   
-  printf("enc3.3\n");
+  //printf("enc3.3\n");
   
   crnti->size = strlen((char*)crnti_buf);
 
-  printf("enc3.4\n");
+  //printf("enc3.4\n");
   memcpy(crnti->buf, crnti_buf, crnti->size);
 
-  printf("enc4\n");  
+  //printf("enc4\n");  
 
   long *p_prb_usage_dl = (long*)calloc(1, sizeof(long));
   long *p_prb_usage_ul = (long*)calloc(1, sizeof(long));
@@ -751,11 +751,11 @@ void encode_kpm_odu_user_level(RAN_Container_t *ranco,
   ue_report_item->dl_PRBUsage = p_prb_usage_dl;
   if (crnti) free(crnti);
 
-  printf("enc5\n");
+  //printf("enc5\n");
   
   ue_report_item->ul_PRBUsage = p_prb_usage_ul;
 
-  printf("enc6\n");
+  //printf("enc6\n");
   
   ASN_SEQUENCE_ADD(&report_item->ueResourceReportList.list, ue_report_item);
 
@@ -765,7 +765,7 @@ void encode_kpm_odu_user_level(RAN_Container_t *ranco,
   ASN_SEQUENCE_ADD(&ranco->reportContainer.choice.oDU_UE.cellResourceReportList.list, report_item);
   if (ts) free(ts);
 
-  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
 
   
 }
@@ -781,7 +781,7 @@ void encode_kpm_report_rancontainer_du_parameterized(E2SM_KPM_IndicationMessage_
   encode_kpm_odu_user_level(ranco,plmnid_buf,nrcellid_buf,crnti_buf,prb_usage_dl,prb_usage_ul);
 
   printf("After creating RAN container, xer printing it\n");
-  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
 
   PM_Containers_List_t *containers_list = (PM_Containers_List_t*)calloc(1, sizeof(PM_Containers_List_t));
   ASN_STRUCT_RESET(asn_DEF_PM_Containers_List, containers_list);
@@ -807,7 +807,7 @@ void encode_kpm_report_rancontainer_du_parameterized(E2SM_KPM_IndicationMessage_
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
 
   asn_codec_ctx_t *opt_cod;
 
@@ -840,7 +840,7 @@ void encode_kpm_report_rancontainer_cucp_parameterized(E2SM_KPM_IndicationMessag
 			      serving_buf, neighbor_buf);
 
   printf("After creating RAN container, xer printing it\n");
-  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
   
 
   PM_Containers_List_t *containers_list = (PM_Containers_List_t*)calloc(1, sizeof(PM_Containers_List_t));
@@ -867,7 +867,7 @@ void encode_kpm_report_rancontainer_cucp_parameterized(E2SM_KPM_IndicationMessag
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
 
   asn_codec_ctx_t *opt_cod;
 
@@ -917,7 +917,7 @@ void encode_kpm_report_rancontainer_cucp(E2SM_KPM_IndicationMessage_t* indicatio
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  //  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
 
   asn_codec_ctx_t *opt_cod;
 
@@ -950,7 +950,7 @@ void encode_kpm_report_rancontainer_cuup_parameterized(E2SM_KPM_IndicationMessag
   encode_kpm_ocuup_user_level(ranco,plmnid_buf,nrcellid_buf,crnti_buf,pdcp_bytesdl,pdcp_bytesul);
 
   fprintf(stderr, "After creating RAN container, xer printing it\n");
-  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);  
+  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);  
 
   PM_Containers_List_t *containers_list = (PM_Containers_List_t*)calloc(1, sizeof(PM_Containers_List_t));
   ASN_STRUCT_RESET(asn_DEF_PM_Containers_List, containers_list);
@@ -976,7 +976,7 @@ void encode_kpm_report_rancontainer_cuup_parameterized(E2SM_KPM_IndicationMessag
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
 
   asn_codec_ctx_t *opt_cod;
 
@@ -986,7 +986,7 @@ void encode_kpm_report_rancontainer_cuup_parameterized(E2SM_KPM_IndicationMessag
   uint8_t e2smbuffer2[8192] = {0, };
   size_t e2smbuffer_size2 = 8192;
 
-  //  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);  
+  //  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);  
 
   asn_enc_rval_t er =
     asn_encode_to_buffer(opt_cod,
@@ -1012,7 +1012,7 @@ void encode_kpm_report_rancontainer_cuup(E2SM_KPM_IndicationMessage_t* indicatio
   ts->size = strlen((char*)buf);
   memcpy(ts->buf,buf,ts->size);
 
-  printf("enc1\n");
+  //printf("enc1\n");
 
   CU_CP_Usage_Report_CellResourceReportItem_t  *report_item =
     (CU_CP_Usage_Report_CellResourceReportItem_t*)calloc(1,sizeof(CU_CP_Usage_Report_CellResourceReportItem_t));
@@ -1024,7 +1024,7 @@ void encode_kpm_report_rancontainer_cuup(E2SM_KPM_IndicationMessage_t* indicatio
   plmnidstr->size = 3;
   memcpy(plmnidstr->buf, buf2, plmnidstr->size);
 
-  printf("enc2\n");  
+  //printf("enc2\n");  
 
   NRCellIdentity_t *nrcellid = (NRCellIdentity_t*)calloc(1,sizeof(NRCellIdentity_t));
   uint8_t* buf3 = (uint8_t*)"12340";
@@ -1039,7 +1039,7 @@ void encode_kpm_report_rancontainer_cuup(E2SM_KPM_IndicationMessage_t* indicatio
   if (plmnidstr) free(plmnidstr);
   if (nrcellid) free(nrcellid);
  
-  printf("enc3\n"); 
+  //printf("enc3\n"); 
   
   report_item->nRCGI = *nrcgi;
   if (nrcgi) free(nrcgi);
@@ -1047,17 +1047,17 @@ void encode_kpm_report_rancontainer_cuup(E2SM_KPM_IndicationMessage_t* indicatio
   CU_CP_Usage_Report_UeResourceReportItem *ue_report_item =
     (CU_CP_Usage_Report_UeResourceReportItem*)calloc(1,sizeof(CU_CP_Usage_Report_UeResourceReportItem));
 
-  printf("enc3.2\n");
+  //printf("enc3.2\n");
 
   uint8_t* crnti_str = (uint8_t*)"1111";
   OCTET_STRING *crnti = (OCTET_STRING*)calloc(1,sizeof(OCTET_STRING));
   crnti->buf = (uint8_t*)calloc(1,4);
   
-  printf("enc3.3\n");
+  //printf("enc3.3\n");
   
   crnti->size = strlen((char*)crnti_str);
 
-  printf("enc3.4\n");
+  //printf("enc3.4\n");
   memcpy(crnti->buf, crnti_str, crnti->size);
 
   uint8_t *buf_serving = (uint8_t*)"RSRP10";
@@ -1083,7 +1083,7 @@ void encode_kpm_report_rancontainer_cuup(E2SM_KPM_IndicationMessage_t* indicatio
   ranco->reportContainer.present = RAN_Container__reportContainer_PR_oCU_CP_UE;
   ASN_SEQUENCE_ADD(&ranco->reportContainer.choice.oCU_CP_UE.cellResourceReportList.list, report_item);
 
-  //  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  //  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
   
 
   PM_Containers_List_t *containers_list = (PM_Containers_List_t*)calloc(1, sizeof(PM_Containers_List_t));
@@ -1110,7 +1110,7 @@ void encode_kpm_report_rancontainer_cuup(E2SM_KPM_IndicationMessage_t* indicatio
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
 
   asn_codec_ctx_t *opt_cod;
 
@@ -1201,7 +1201,7 @@ void encode_kpm_report_style1_parameterized(E2SM_KPM_IndicationMessage_t* indica
   plmnidstr->size = 3;
   memcpy(plmnidstr->buf, plmnid_buf, plmnidstr->size);
 
-  printf("enc2\n");  
+  //printf("enc2\n");  
 
   NRCellIdentity_t *nrcellid = (NRCellIdentity_t*)calloc(1,sizeof(NRCellIdentity_t));
   uint8_t* buf3 = (uint8_t*)"12340";
@@ -1261,7 +1261,7 @@ void encode_kpm_report_style1_parameterized(E2SM_KPM_IndicationMessage_t* indica
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
   
 
   uint8_t e2smbuffer[8192] = {0, };
@@ -1338,7 +1338,7 @@ void encode_kpm_report_style1(E2SM_KPM_IndicationMessage_t* indicationmessage) {
   plmnidstr->size = 3;
   memcpy(plmnidstr->buf, buf2, plmnidstr->size);
 
-  printf("enc2\n");  
+  //printf("enc2\n");  
 
   NRCellIdentity_t *nrcellid = (NRCellIdentity_t*)calloc(1,sizeof(NRCellIdentity_t));
   uint8_t* buf3 = (uint8_t*)"12340";
@@ -1400,7 +1400,7 @@ void encode_kpm_report_style1(E2SM_KPM_IndicationMessage_t* indicationmessage) {
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
   
 
   uint8_t e2smbuffer[8192] = {0, };
@@ -1653,7 +1653,7 @@ void encode_kpm_report_style5_parameterized(E2SM_KPM_IndicationMessage_t* indica
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
   
 
   uint8_t e2smbuffer[8192] = {0, };
@@ -1816,7 +1816,7 @@ void encode_kpm_report_style5(E2SM_KPM_IndicationMessage_t* indicationmessage) {
   printf("error length %lu\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
   
 
   uint8_t e2smbuffer[8192] = {0, };
@@ -1994,7 +1994,7 @@ void encode_kpm(E2SM_KPM_IndicationMessage_t* indicationmessage) {
   printf("error length %d\n", errlen);
   printf("error buf %s\n", error_buf);
 
-  xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
+  //xer_fprint(stderr, &asn_DEF_E2SM_KPM_IndicationMessage, indicationmessage);
   
 
   uint8_t e2smbuffer[8192];

@@ -132,7 +132,7 @@ void e2ap_handle_sctp_data(int &socket_fd, sctp_buffer_t &data, bool xmlenc, E2S
           LOG_I("[E2AP] Received RIC-SUBSCRIPTION-REQUEST");
 	        // e2ap_handle_RICSubscriptionRequest(pdu, socket_fd);
 	        long func_id = encoding::get_function_id_from_subscription(pdu);
-	        fprintf(stderr, "Function Id of message is %ld\n", func_id);
+	        //fprintf(stderr, "Function Id of message is %ld\n", func_id);
 	        SmCallback cb;
 
 	        bool func_exists = true;
@@ -318,7 +318,7 @@ void e2ap_handle_E2SetupRequest(E2AP_PDU_t* pdu, int &socket_fd) {
 
   encoding::generate_e2apv1_subscription_request(pdu_sub);
 
-  xer_fprint(stderr, &asn_DEF_E2AP_PDU, pdu_sub);
+  //xer_fprint(stderr, &asn_DEF_E2AP_PDU, pdu_sub);
 
   auto buffer_size2 = MAX_SCTP_BUFFER;
   unsigned char buffer2[MAX_SCTP_BUFFER];
