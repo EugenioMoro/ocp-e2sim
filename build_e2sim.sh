@@ -74,7 +74,7 @@ done
 cd $root_folder
 
 CURR_DIR=$(pwd)
-DEBUG=0
+DEBUG=1
 
 # build e2sim
 rm -Rf build

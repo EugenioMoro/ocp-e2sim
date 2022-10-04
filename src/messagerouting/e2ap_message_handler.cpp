@@ -30,7 +30,7 @@
 
 void e2ap_handle_sctp_data(int &socket_fd, sctp_buffer_t &data, bool xmlenc, E2Sim *e2sim)
 {
-  fprintf(stderr, "in e2ap_handle_sctp_data()\n");
+  //fprintf(stderr, "in e2ap_handle_sctp_data()\n");
   //decode the data into E2AP-PDU
   E2AP_PDU_t* pdu = (E2AP_PDU_t*)calloc(1, sizeof(E2AP_PDU));
   ASN_STRUCT_RESET(asn_DEF_E2AP_PDU, pdu);
@@ -43,7 +43,7 @@ void e2ap_handle_sctp_data(int &socket_fd, sctp_buffer_t &data, bool xmlenc, E2S
   syntax = ATS_ALIGNED_BASIC_PER;
   
 
-  fprintf(stderr, "full buffer\n%s\n", data.buffer);
+  //fprintf(stderr, "full buffer\n%s\n", data.buffer);
   //  e2ap_asn1c_decode_pdu(pdu, data.buffer, data.len);
 
   auto rval = asn_decode(nullptr, syntax, &asn_DEF_E2AP_PDU, (void **) &pdu,
@@ -51,13 +51,13 @@ void e2ap_handle_sctp_data(int &socket_fd, sctp_buffer_t &data, bool xmlenc, E2S
   
 
   int index = (int)pdu->present;
-  fprintf(stderr, "length of data %lu\n", rval.consumed);
-  fprintf(stderr, "result %d\n", rval.code);
-  fprintf(stderr, "index is %d\n", index);
+  //fprintf(stderr, "length of data %lu\n", rval.consumed);
+  //fprintf(stderr, "result %d\n", rval.code);
+  //fprintf(stderr, "index is %d\n", index);
   
-  fprintf(stderr, "showing xer of data\n");  
+  //fprintf(stderr, "showing xer of data\n");  
   
-  xer_fprint(stderr, &asn_DEF_E2AP_PDU, pdu);
+  //xer_fprint(stderr, &asn_DEF_E2AP_PDU, pdu);
   
   int procedureCode = e2ap_asn1c_get_procedureCode(pdu);
   index = (int)pdu->present;

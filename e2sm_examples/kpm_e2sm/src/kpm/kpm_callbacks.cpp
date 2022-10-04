@@ -69,9 +69,8 @@ E2Sim e2sim;
 
 int main(int argc, char* argv[]) {
 
-	fprintf(stderr, "Starting KPM processor sim");
+	fprintf(stderr, "Starting e2term - oai support version\n\n");
 
-	fprintf(stderr, "JSON Test\n");
 
 	// uint8_t *nrcellid_buf = (uint8_t*)calloc(1,5);
 	// nrcellid_buf[0] = 0x22;
@@ -86,42 +85,30 @@ int main(int argc, char* argv[]) {
 	(E2SM_KPM_RANfunction_Description_t*)calloc(1,sizeof(E2SM_KPM_RANfunction_Description_t));
 	encode_kpm_function_description(ranfunc_desc);
 
+	fprintf(stderr, "Encoding RAN Function Description\n");
 	uint8_t e2smbuffer[8192] = {0, };
 	size_t e2smbuffer_size = 8192;
-
 	asn_enc_rval_t er =
 	asn_encode_to_buffer(opt_cod,
 		ATS_ALIGNED_BASIC_PER,
 		&asn_DEF_E2SM_KPM_RANfunction_Description,
 		ranfunc_desc, e2smbuffer, e2smbuffer_size);
 
-	fprintf(stderr, "er encded is %ld\n", er.encoded);
-	fprintf(stderr, "after encoding message\n");
-	fprintf(stderr, "here is encoded message %s\n", e2smbuffer);
+	//fprintf(stderr, "er encded is %ld\n", er.encoded);
+	//fprintf(stderr, "after encoding message\n");
+	//fprintf(stderr, "here is encoded message %s\n", e2smbuffer);
 
 	uint8_t *ranfuncdesc = (uint8_t*)calloc(1,er.encoded);
 	memcpy(ranfuncdesc, e2smbuffer, er.encoded);
 
-	printf("this is the char array %s\n", (char*)ranfuncdesc);
+	//printf("this is the char array %s\n", (char*)ranfuncdesc);
 
 	OCTET_STRING_t *ranfunc_ostr = (OCTET_STRING_t*)calloc(1,sizeof(OCTET_STRING_t));
 	ranfunc_ostr->buf = (uint8_t*)calloc(1,er.encoded);
 	ranfunc_ostr->size = er.encoded;
 	memcpy(ranfunc_ostr->buf,e2smbuffer,er.encoded);
 
-	printf("!!!lenth of ranfuncdesc is %lu\n", strlen((char*)ranfuncdesc));
-	printf("value of this index is %d\n", ranfuncdesc[0]);
-	printf("value of this index is %d\n", ranfuncdesc[1]);
-	printf("value of this index is %d\n", ranfuncdesc[2]);
-	printf("value of this index is %d\n", ranfuncdesc[3]);
-	printf("value of this index is %d\n", ranfuncdesc[4]);
-	printf("value of this index is %d\n", ranfuncdesc[5]);
-	printf("value of this index is %d\n", ranfuncdesc[6]);
-	printf("value of this index is %d\n", ranfuncdesc[10]);
-	printf("value of this index is %d\n", ranfuncdesc[15]);
-	printf("value of this index is %d\n", ranfuncdesc[100]);
-	printf("value of this index is %d\n", ranfuncdesc[101]);
-
+	fprintf(stderr, "Registering RAN Function Description callbacks\n");
 	e2sim.register_e2sm(0,ranfunc_ostr);
 
   // register callbacks
@@ -129,6 +116,7 @@ int main(int argc, char* argv[]) {
 	e2sim.register_sm_callback(1,&callback_kpm_subscription_request);
 	e2sim.register_sm_callback(300,&callback_kpm_control);
 
+	fprintf(stderr, "Init done, running loop...\n");
 	e2sim.run_loop(argc, argv);
 
 }
@@ -1167,7 +1155,18 @@ void callback_kpm_control(E2AP_PDU_t *control_pdu) {
 
 			case RICcontrolRequest_IEs__value_PR_RICcontrolMessage: {
 				fprintf(stderr, "[E2SM] RICcontrolRequest_IEs__value_PR_RICcontrolMessage\n");
-        // xer_fprint(stderr, &asn_DEF_RICcontrolMessage, &ie->value.choice.RICcontrolMessage);
+                //xer_fprint(stderr, &asn_DEF_RICcontrolMessage, &ie->value.choice.RICcontrolMessage);
+
+				// we do not decode since the buffer has to be sent to the gnb
+				int bfsize = (int) ie->value.choice.RICcontrolMessage.size;
+				fprintf(stderr,"Received control message of size %d\n", bfsize);
+
+				fprintf(stderr,"DEBUG: buffer to string: ");
+				for(int i=0; i<bfsize; i++){
+					fprintf(stderr,"%c", ie->value.choice.RICcontrolMessage.buf[i]);
+				}
+				fprintf(stderr,"\n");
+				break;
 
 				E2SM_HelloWorld_ControlMessage_t *e2SmControlMessage = (E2SM_HelloWorld_ControlMessage_t *) calloc(1, sizeof(E2SM_HelloWorld_ControlMessage_t));
 				ASN_STRUCT_RESET(asn_DEF_E2SM_HelloWorld_ControlMessage, e2SmControlMessage);

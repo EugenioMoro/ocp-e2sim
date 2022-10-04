@@ -40,13 +40,13 @@ std::unordered_map<long, OCTET_STRING_t*> E2Sim::getRegistered_ran_functions() {
 }
 
 void E2Sim::register_sm_callback(long func_id, SmCallback cb) {
-  fprintf(stderr,"%%%%about to register the sm callback for func_id %ld\n", func_id);
+  //fprintf(stderr,"%%%%about to register the sm callback for func_id %ld\n", func_id);
   sm_callbacks[func_id] = cb;
   
 }
 
 SmCallback E2Sim::get_sm_callback(long func_id) {
-  fprintf(stderr, "%%%%we are getting the sm callback for func id %ld\n", func_id);
+  //fprintf(stderr, "%%%%we are getting the sm callback for func id %ld\n", func_id);
   SmCallback cb;
 
   try {
@@ -63,7 +63,7 @@ void E2Sim::register_e2sm(long func_id, OCTET_STRING_t *ostr) {
   //Error conditions:
   //If we already have an entry for func_id
   
-  printf("%%%%about to register e2sm func desc for %ld\n", func_id);
+  //printf("%%%%about to register e2sm func desc for %ld\n", func_id);
 
   ran_functions_registered[func_id] = ostr;
 
@@ -106,11 +106,11 @@ void E2Sim::generate_e2apv1_indication_request_parameterized(E2AP_PDU *e2ap_pdu,
 
 int E2Sim::run_loop(int argc, char* argv[]){
 
-  printf("Start E2 Agent (E2 Simulator\n");
+  printf("E2Sim loop init...\n");
 
+  /*
   ifstream simfile;
   string line;
-
   simfile.open("simulation.txt", ios::in);
 
   if (simfile.is_open()) {
@@ -122,12 +122,13 @@ int E2Sim::run_loop(int argc, char* argv[]){
     simfile.close();
 
   }
+  */
 
   bool xmlenc = false;
 
   options_t ops = read_input_options(argc, argv);
 
-  printf("After reading input options\n");
+  //printf("After reading input options\n");
 
   //E2 Agent will automatically restart upon sctp disconnection
   //  int server_fd = sctp_start_server(ops.server_ip, ops.server_port);
@@ -135,8 +136,8 @@ int E2Sim::run_loop(int argc, char* argv[]){
   client_fd = sctp_start_client(ops.server_ip, ops.server_port);
   E2AP_PDU_t* pdu_setup = (E2AP_PDU_t*)calloc(1,sizeof(E2AP_PDU));
 
-  printf("After starting client\n");
-  printf("client_fd value is %d\n", client_fd);
+  //printf("After starting client\n");
+  //printf("client_fd value is %d\n", client_fd);
   
   std::vector<encoding::ran_func_info> all_funcs;
   RANfunctionOID_t *ranFunctionOIDe = (RANfunctionOID_t*)calloc(1,sizeof(RANfunctionOID_t));
@@ -148,7 +149,7 @@ int E2Sim::run_loop(int argc, char* argv[]){
   //Loop through RAN function definitions that are registered
 
   for (std::pair<long, OCTET_STRING_t*> elem : ran_functions_registered) {
-    printf("looping through ran func\n");
+    //printf("looping through ran func\n");
     encoding::ran_func_info next_func;
 
     next_func.ranFunctionId = elem.first;
@@ -159,15 +160,15 @@ int E2Sim::run_loop(int argc, char* argv[]){
     all_funcs.push_back(next_func);
   }
     
-  printf("about to call setup request encode\n");
-  
+  //printf("about to call setup request encode\n");
+  printf("Generating e2apv1 setup request\n");
   generate_e2apv1_setup_request_parameterized(pdu_setup, all_funcs);
 
-  printf("After generating e2setup req\n");
+  //printf("After generating e2setup req\n");
 
-  xer_fprint(stderr, &asn_DEF_E2AP_PDU, pdu_setup);
+  //xer_fprint(stderr, &asn_DEF_E2AP_PDU, pdu_setup);
 
-  printf("After XER Encoding\n");
+  //printf("After XER Encoding\n");
 
   auto buffer_size = MAX_SCTP_BUFFER;
   unsigned char buffer[MAX_SCTP_BUFFER];
@@ -178,14 +179,18 @@ int E2Sim::run_loop(int argc, char* argv[]){
   size_t errlen = 0;
 
   asn_check_constraints(&asn_DEF_E2AP_PDU, pdu_setup, error_buf, &errlen);
-  printf("error length %lu\n", errlen);
-  printf("error buf %s\n", error_buf);
+  if(errlen != 0){
+    printf("FATAL: asn constraint check failed\n");
+    assert(1==0);
+  }
+  //printf("error length %lu\n", errlen);
+  //printf("error buf %s\n", error_buf);
 
   auto er = asn_encode_to_buffer(nullptr, ATS_ALIGNED_BASIC_PER, &asn_DEF_E2AP_PDU, pdu_setup, buffer, buffer_size);
 
   data.len = er.encoded;
 
-  fprintf(stderr, "er encded is %ld\n", er.encoded);
+  //fprintf(stderr, "er encded is %ld\n", er.encoded);
 
   memcpy(data.buffer, buffer, er.encoded);
 
