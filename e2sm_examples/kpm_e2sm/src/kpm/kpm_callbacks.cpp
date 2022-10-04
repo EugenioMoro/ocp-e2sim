@@ -900,8 +900,8 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 
 	RICsubscriptionRequest_IEs_t **ies = (RICsubscriptionRequest_IEs_t**)orig_req.protocolIEs.list.array;
 
-	fprintf(stderr, "count%d\n", count);
-	fprintf(stderr, "size%d\n", size);
+	//fprintf(stderr, "count%d\n", count);
+	//fprintf(stderr, "size%d\n", size);
 
 	RICsubscriptionRequest_IEs__value_PR pres;
 
@@ -914,7 +914,7 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 
 	long requestorId;
 	RICeventTriggerDefinition_t *triggerDef;
-	triggerDef->buf = NULL;
+	//triggerDef->buf = NULL;
 	triggerDef->size = 0;
 
 	for (int i=0; i < count; i++) {
@@ -926,12 +926,12 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 		switch(pres) {
 			case RICsubscriptionRequest_IEs__value_PR_RICrequestID:
 			{
-				fprintf(stderr,"in case request id\n");	
+				//fprintf(stderr,"in case request id\n");	
 				RICrequestID_t reqId = next_ie->value.choice.RICrequestID;
 				requestorId = reqId.ricRequestorID;
 				long instanceId = reqId.ricInstanceID;
-				fprintf(stderr, "requestorId %ld\n", requestorId);
-				fprintf(stderr, "instanceId %ld\n", instanceId);
+				//fprintf(stderr, "requestorId %ld\n", requestorId);
+				//fprintf(stderr, "instanceId %ld\n", instanceId);
 				reqRequestorId = requestorId;
 				reqInstanceId = instanceId; 
 
@@ -939,31 +939,33 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 			}
 			case RICsubscriptionRequest_IEs__value_PR_RANfunctionID:
 			{
-				fprintf(stderr,"in case ran func id\n");	
+				//fprintf(stderr,"in case ran func id\n");	
 				break;
 			}
 			case RICsubscriptionRequest_IEs__value_PR_RICsubscriptionDetails:
 			{
-				fprintf(stderr,"in case subscription details\n");
+				//fprintf(stderr,"in case subscription details\n");
 				RICsubscriptionDetails_t subDetails = next_ie->value.choice.RICsubscriptionDetails;
-				fprintf(stderr,"in case subscription details 1\n");	
+				//fprintf(stderr,"in case subscription details 1\n");	
 				triggerDef = &subDetails.ricEventTriggerDefinition;
-				fprintf(stderr,"in case subscription details 2\n");	
+				//fprintf(stderr,"in case subscription details 2\n");	
 				RICactions_ToBeSetup_List_t actionList = subDetails.ricAction_ToBeSetup_List;
-				fprintf(stderr,"in case subscription details 3\n");
+				//fprintf(stderr,"in case subscription details 3\n");
 
 				// print trigger information
+				/*
 				if (triggerDef->buf) {
 					fprintf(stderr, "Received trigger %s\n", triggerDef->buf);
 				}
 				else {
 					fprintf(stderr, "No trigger received in subscription request\n");
 				}
+				*/
 
 				// We identify the first action whose type is REPORT
 				// That is the only one accepted; all others are rejected
 				int actionCount = actionList.list.count;
-				fprintf(stderr, "action count%d\n", actionCount);
+				//fprintf(stderr, "action count%d\n", actionCount);
 
 				auto **item_array = actionList.list.array;
 
@@ -978,11 +980,11 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 					if (!foundAction && (actionType == RICactionType_report || actionType == RICactionType_insert)) {
 						reqActionId = actionId;
 						actionIdsAccept.push_back(reqActionId);
-						fprintf(stderr, "adding accept\n");
+						//fprintf(stderr, "adding accept\n");
 						foundAction = true;
 					} else {
 						reqActionId = actionId;
-						fprintf(stderr, "action rejected but not added to vector\n");
+						//fprintf(stderr, "action rejected but not added to vector\n");
 	    			// printf("adding reject\n");
 	    			// actionIdsReject.push_back(reqActionId);
 					}
@@ -992,22 +994,23 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 			}
 			default:
 			{
-				fprintf(stderr,"in case default\n");	
+				//fprintf(stderr,"in case default\n");	
 				break;
 			}      
 		}
 
 	}
 
-	fprintf(stderr, "After Processing Subscription Request\n");
+	//fprintf(stderr, "After Processing Subscription Request\n");
 
-	fprintf(stderr, "requestorId %ld\n", reqRequestorId);
-	fprintf(stderr, "instanceId %ld\n", reqInstanceId);
+	//fprintf(stderr, "requestorId %ld\n", reqRequestorId);
+	//fprintf(stderr, "instanceId %ld\n", reqInstanceId);
 
-
+    /*
 	for (int i=0; i < actionIdsAccept.size(); i++) {
 		fprintf(stderr, "Action ID %d %ld\n", i, actionIdsAccept.at(i));
 	}
+	*/
 
 	E2AP_PDU *e2ap_pdu = (E2AP_PDU*)calloc(1,sizeof(E2AP_PDU));
 
