@@ -2,7 +2,10 @@
 #include "encode_e2apv1.hpp"
 #include "encode_kpm.hpp"
 #include "kpm_callbacks.hpp"
-
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <boost/asio.hpp>
 extern "C" {
   #include "csv_reader.h"
   #include "E2SM-KPM-IndicationMessage.h"
@@ -55,6 +58,17 @@ void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id,
   
   if (DEBUG) {
     fprintf(stderr, "DEBUG mode\n");
+    fprintf(stderr, "Sending something to gnb\n");
+    payload = (char*) "{\"timestamp\":1602706183796,\"slice_id\":0,\"dl_bytes\":53431,\"dl_thr_mbps\":2.39,\"ratio_granted_req_prb\":0.02,\"slice_prb\":6,\"dl_pkts\":200}";
+    boost::asio::io_service io_service; 
+    boost::asio::ip::udp::socket socket(io_service);
+    boost::asio::ip::udp::endpoint remote_endpoint;
+    socket.open(boost::asio::ip::udp::v4());
+    int out_port = 6655;
+    remote_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), out_port);
+    boost::system::error_code err;
+    socket.send_to(boost::asio::buffer("ciao",4), remote_endpoint,0,err);
+
     payload = (char*) "{\"timestamp\":1602706183796,\"slice_id\":0,\"dl_bytes\":53431,\"dl_thr_mbps\":2.39,\"ratio_granted_req_prb\":0.02,\"slice_prb\":6,\"dl_pkts\":200}";
   }
   else {
@@ -137,4 +151,18 @@ void log_message(char* message, char* message_type, int len) {
 void stop_data_reporting_nrt_ric(void) {
   printf("Terminating data reporting to near-real-time RIC\n");
   report_data_nrt_ric = 0;
+}
+
+
+// this sends udp datagrams containing buffers to gnb
+void send_ricindi_to_bs(char* buffer, int buflen){
+  fprintf(stderr, "sending udp datagram\n");
+  boost::asio::io_service io_service; 
+  boost::asio::ip::udp::socket socket(io_service);
+  boost::asio::ip::udp::endpoint remote_endpoint;
+  socket.open(boost::asio::ip::udp::v4());
+  int out_port = 6655;
+  remote_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), out_port);
+  boost::system::error_code err;
+  socket.send_to(boost::asio::buffer(buffer,buflen), remote_endpoint,0,err);
 }

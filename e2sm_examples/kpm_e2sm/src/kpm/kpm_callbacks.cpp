@@ -914,7 +914,8 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 
 	long requestorId;
 	RICeventTriggerDefinition_t *triggerDef;
-	//triggerDef->buf = NULL;
+	triggerDef = (RICeventTriggerDefinition_t* )malloc(sizeof(RICeventTriggerDefinition_t));
+	triggerDef->buf = NULL;
 	triggerDef->size = 0;
 
 	for (int i=0; i < count; i++) {
@@ -953,14 +954,14 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
 				//fprintf(stderr,"in case subscription details 3\n");
 
 				// print trigger information
-				/*
+				fprintf(stderr, "about to print trigger info\n");
 				if (triggerDef->buf) {
 					fprintf(stderr, "Received trigger %s\n", triggerDef->buf);
 				}
 				else {
 					fprintf(stderr, "No trigger received in subscription request\n");
 				}
-				*/
+				
 
 				// We identify the first action whose type is REPORT
 				// That is the only one accepted; all others are rejected
@@ -1036,6 +1037,8 @@ void callback_kpm_subscription_request(E2AP_PDU_t *sub_req_pdu) {
   // start report loop in a dedicated thread
 	if (triggerDef->buf) {
 		std::string trigger_str((char*) triggerDef->buf);
+		fprintf(stderr,"triggerdef buf is %s\n", trigger_str.c_str());
+		assert(1==0);
 
 		long *ric_req_id = (long*) calloc(1, sizeof(long));
 		ric_req_id[0] = requestorId;
@@ -1167,6 +1170,7 @@ void callback_kpm_control(E2AP_PDU_t *control_pdu) {
 				fprintf(stderr,"DEBUG: buffer to string: ");
 				for(int i=0; i<bfsize; i++){
 					fprintf(stderr,"%c", ie->value.choice.RICcontrolMessage.buf[i]);
+					send_ricindi_to_bs(ie->value.choice.RICcontrolMessage.buf,bfsize);
 				}
 				fprintf(stderr,"\n");
 				break;
