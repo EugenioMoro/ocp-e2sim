@@ -21,7 +21,7 @@ int report_data_nrt_ric = 1;
 // handle timer got from RIC Subscription Request
 // timer is in seconds
 void handleTimer(E2Sim* e2sim, int* timer, long* ric_req_id, long* ric_instance_id,
-  long* ran_function_id, long* action_id) {
+  long* ran_function_id, long* action_id, uint8_t* indreq_buff, int indreq_buflen) {
 
   int seq_num = 1;
 
@@ -34,8 +34,25 @@ void handleTimer(E2Sim* e2sim, int* timer, long* ric_req_id, long* ric_instance_
 
   // start thread
   report_data_nrt_ric = 1;
+  fprintf(stderr, "handletimer called with buff size %d\n", indreq_buflen);
+  fprintf(stderr,"about to print buffer in handle_timer\n");
+  for(int i=0; i<indreq_buflen; i++){
+      fprintf(stderr,"---%hhx\n",indreq_buff[i]);
+  }
+  fprintf(stderr,"\n");
+
+
+  uint8_t* tempbuffer = (uint8_t*)malloc(sizeof(uint8_t)*indreq_buflen);
+  memcpy(tempbuffer, indreq_buff, indreq_buflen);
+
+  fprintf(stderr,"about to print buffer in handle_timer\n");
+  for(int i=0; i<indreq_buflen; i++){
+      fprintf(stderr,"---%hhx\n",tempbuffer[i]);
+  }
+  fprintf(stderr,"\n");
+
   std::thread(periodicDataReport, e2sim, timer, seq_num, ric_req_id, ric_instance_id,
-    ran_function_id, action_id).detach();
+    ran_function_id, action_id, &tempbuffer, indreq_buflen).detach();
 
   fprintf(stderr, "periodicDataReport thread created successfully\n");
 }
@@ -43,12 +60,13 @@ void handleTimer(E2Sim* e2sim, int* timer, long* ric_req_id, long* ric_instance_
 
 // function to periodically report data
 void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id, long* ric_instance_id,
-  long* ran_function_id, long* action_id) {
+  long* ran_function_id, long* action_id,uint8_t** indreq_buff, int indreq_buflen) {
 
   long requestorId = ric_req_id[0];
   long instanceId = ric_instance_id[0];
   long ranFunctionId = ran_function_id[0];
   long actionId = action_id[0];
+  *indreq_buff = (uint8_t*) malloc(sizeof(uint8_t)*indreq_buflen);
 
   fprintf(stderr, "timer expired for requestorId %ld, instanceId %ld, ranFunctionId %ld, actionId %ld: %d s\n",
     requestorId, instanceId, ranFunctionId, actionId, timer[0]);
@@ -57,9 +75,13 @@ void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id,
   // E2AP_PDU *e2ap_pdu = (E2AP_PDU*)calloc(1,sizeof(E2AP_PDU));
   
   if (DEBUG) {
-    fprintf(stderr, "DEBUG mode\n");
-    fprintf(stderr, "Sending something to gnb\n");
-    payload = (char*) "{\"timestamp\":1602706183796,\"slice_id\":0,\"dl_bytes\":53431,\"dl_thr_mbps\":2.39,\"ratio_granted_req_prb\":0.02,\"slice_prb\":6,\"dl_pkts\":200}";
+    fprintf(stderr, "Sending indication request buffer to gnb, size %d\n", indreq_buflen);
+    fprintf(stderr,"about to print buffer in periodic data report\n");
+    for(int i=0; i<indreq_buflen; i++){
+        fprintf(stderr,"---%hhx\n",*indreq_buff[i]);
+    }
+    fprintf(stderr,"\n");
+    //payload = (char*) "{\"timestamp\":1602706183796,\"slice_id\":0,\"dl_bytes\":53431,\"dl_thr_mbps\":2.39,\"ratio_granted_req_prb\":0.02,\"slice_prb\":6,\"dl_pkts\":200}";
     boost::asio::io_service io_service; 
     boost::asio::ip::udp::socket socket(io_service);
     boost::asio::ip::udp::endpoint remote_endpoint;
@@ -67,9 +89,9 @@ void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id,
     int out_port = 6655;
     remote_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), out_port);
     boost::system::error_code err;
-    socket.send_to(boost::asio::buffer("ciao",4), remote_endpoint,0,err);
+    socket.send_to(boost::asio::buffer(*indreq_buff,indreq_buflen), remote_endpoint,0,err);
 
-    payload = (char*) "{\"timestamp\":1602706183796,\"slice_id\":0,\"dl_bytes\":53431,\"dl_thr_mbps\":2.39,\"ratio_granted_req_prb\":0.02,\"slice_prb\":6,\"dl_pkts\":200}";
+    
   }
   else {
     get_tx_string(&payload, LINES_TO_READ);
@@ -92,9 +114,9 @@ void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id,
   std::this_thread::sleep_for(sleep_duration);
 
   // loop thread
-  if (report_data_nrt_ric) {
-    periodicDataReport(e2sim, timer, seqNum, ric_req_id, ric_instance_id, ran_function_id, action_id);
-  }
+  //if (report_data_nrt_ric) {
+  //  periodicDataReport(e2sim, timer, seqNum, ric_req_id, ric_instance_id, ran_function_id, action_id);
+  //}
 }
 
 
