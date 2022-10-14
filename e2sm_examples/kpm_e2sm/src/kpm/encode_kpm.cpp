@@ -555,6 +555,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco,
   //  uint8_t *buf_serving = (uint8_t*)"RSRP10";
 
   int serving_buf_len = strlen((char*)serving_buf);
+  fprintf(stderr, "in encode_kpm_ocucp_user_level buflen is %d", serving_buf_len);
   OCTET_STRING_t *servingstr = (OCTET_STRING_t*)calloc(1,sizeof(OCTET_STRING_t));
   servingstr->buf = (uint8_t*)calloc(serving_buf_len,1);
   servingstr->size = serving_buf_len;
@@ -588,7 +589,7 @@ void encode_kpm_ocucp_user_level(RAN_Container_t *ranco,
   
   if (ts) free(ts);
 
-  //xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
+  xer_fprint(stderr, &asn_DEF_RAN_Container, ranco);
 }
 
 void encode_kpm_ocucp_user_level(RAN_Container_t *ranco) {
