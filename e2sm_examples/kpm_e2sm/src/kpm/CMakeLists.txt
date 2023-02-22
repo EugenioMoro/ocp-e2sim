@@ -15,7 +15,8 @@
 #==================================================================================
 #
 
-add_executable( kpm_sim kpm_callbacks.cpp encode_kpm.cpp bs_connector.cpp csv_reader.c srs_connector.cpp)
+add_executable( kpm_sim kpm_callbacks.cpp encode_kpm.cpp bs_connector.cpp)
+# bs_connector.cpp csv_reader.c srs_connector.cpp)
 find_package(Boost REQUIRED system)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})

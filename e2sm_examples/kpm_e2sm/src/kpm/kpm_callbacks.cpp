@@ -50,16 +50,16 @@ extern "C"
 
 #include "encode_e2apv1.hpp"
 
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
 #include <thread>
 #include <chrono>
 
-#include "viavi_connector.hpp"
+//#include "viavi_connector.hpp"
 
 #include "bs_connector.hpp"
 #include "srs_connector.hpp"
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 using namespace std;
 class E2Sim;
@@ -147,6 +147,8 @@ void get_cell_id(uint8_t *nrcellid_buf, char *cid_return_buf)
 
 void run_report_loop(long requestorId, long instanceId, long ranFunctionId, long actionId)
 {
+	return;
+}/*
 	std::filebuf reports_json;
 	std::streambuf *input_filebuf = &reports_json;
 
@@ -738,7 +740,7 @@ void run_report_loop(long requestorId, long instanceId, long ranFunctionId, long
 		}
 	}
 }
-
+*/
 // send single metrics through the indication report
 void encode_and_send_ric_indication_report_metrics_single(long seqNum, long requestorId, long instanceId, long ranFunctionId, long actionId)
 {
