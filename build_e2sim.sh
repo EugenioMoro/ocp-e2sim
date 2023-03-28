@@ -35,7 +35,7 @@ apt-get update && apt-get install -y \
   bison \
   flex \
   libboost-all-dev
-build_json_from_source
+#build_json_from_source
 }
 
 function print_help(){
