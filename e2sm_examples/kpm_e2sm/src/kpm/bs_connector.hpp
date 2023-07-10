@@ -20,5 +20,7 @@ void periodicDataReport(E2Sim* e2sim, int* timer, long seqNum, long* ric_req_id,
 void log_message(char* message, char* message_type, int len);
 void stop_data_reporting_nrt_ric(void);
 void send_ricindi_to_bs(uint8_t* buffer, int buflen);
+void RICIndiListener(E2Sim *e2sim, long seqNum, long requestorId);
+void startUnsolicitedRICIndiListener(E2Sim *e2sim, long requestorId);
 
 #endif

@@ -1274,6 +1274,10 @@ void callback_kpm_control(E2AP_PDU_t *control_pdu)
 			}
 			fprintf(stderr, "\n");
 			send_ricindi_to_bs(ie->value.choice.RICcontrolMessage.buf, bfsize);
+			// start listening thread
+
+			startUnsolicitedRICIndiListener(&e2sim, reqRequestorId);
+
 			break;
 
 			E2SM_HelloWorld_ControlMessage_t *e2SmControlMessage = (E2SM_HelloWorld_ControlMessage_t *)calloc(1, sizeof(E2SM_HelloWorld_ControlMessage_t));

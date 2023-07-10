@@ -20,6 +20,7 @@ extern "C"
 int report_data_nrt_ric = 1;
 uint8_t *indication_request_buffer;
 int indication_request_length;
+bool report_listener_running = false;
 
 // handle timer got from RIC Subscription Request
 // timer is in seconds
@@ -60,6 +61,62 @@ void handleTimer(E2Sim *e2sim, int *timer, long *ric_req_id, long *ric_instance_
   fprintf(stderr, "periodicDataReport thread created successfully\n");
 }
 
+void startUnsolicitedRICIndiListener(E2Sim *e2sim, long requestorId){
+                if(!report_listener_running){
+                  long seq_num = 1;
+                  std::thread(RICIndiListener, e2sim, seq_num, requestorId).detach();
+                  report_listener_running = true;
+                }
+                 }
+
+// function to periodically report data
+void RICIndiListener(E2Sim *e2sim, long seqNum, long requestorId)
+{ 
+
+
+
+  int in_port = 6600;
+  boost::asio::io_service io_service;
+
+  // in socket (from gnb)
+  boost::asio::ip::udp::socket in_socket(io_service);
+  boost::asio::ip::udp::endpoint remote_endpoint_in;
+  in_socket.open(boost::asio::ip::udp::v4());
+  remote_endpoint_in = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), in_port);
+  in_socket.bind(remote_endpoint_in);
+  //in_socket.bind(remote_endpoint_in, in_port);
+  boost::system::error_code err;
+
+  char recvbuf[4096];
+  size_t recvlen;
+
+  E2AP_PDU *e2ap_pdu = NULL;
+  while(true){
+    recvlen = in_socket.receive_from(boost::asio::buffer(recvbuf), remote_endpoint_in);
+    fprintf(stderr, " recevied %lu bytes\n", recvlen);
+
+    // append null terminator to payload such that the buffer can be processed by the kind-of-stupid following encoders
+    recvbuf[recvlen] = '\0';
+
+    fprintf(stderr,"printing buf recevied from gnb:\n");
+    for(int i=0; i<recvlen; i++){
+      fprintf(stderr, " %hhx ", recvbuf[i]);
+    }
+    fprintf(stderr, "\n");
+
+    fprintf(stderr,"Sending report to ric\n");
+
+    e2ap_pdu = (E2AP_PDU*)calloc(1,sizeof(E2AP_PDU));
+    fprintf(stderr, "Encoding RIC Indication Report\n");
+    encoding::generate_e2apv1_indication_report(e2ap_pdu, recvbuf, recvlen, requestorId, 0, 0, 0);
+    fprintf(stderr, "RIC Indication Report successfully encoded\n");
+    e2sim->encode_and_send_sctp_data(e2ap_pdu);
+
+    //free(e2ap_pdu);
+    seqNum++;
+  }
+}
+
 // function to periodically report data
 void periodicDataReport(E2Sim *e2sim, int *timer, long seqNum, long *ric_req_id, long *ric_instance_id,
                         long *ran_function_id, long *action_id)
@@ -85,9 +142,9 @@ void periodicDataReport(E2Sim *e2sim, int *timer, long seqNum, long *ric_req_id,
   // in socket (from gnb)
   boost::asio::ip::udp::socket in_socket(io_service);
   boost::asio::ip::udp::endpoint remote_endpoint_in;
-  in_socket.open(boost::asio::ip::udp::v4());
+  //in_socket.open(boost::asio::ip::udp::v4());
   remote_endpoint_in = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), in_port);
-  in_socket.bind(remote_endpoint_in);
+  //in_socket.bind(remote_endpoint_in);
   //in_socket.bind(remote_endpoint_in, in_port);
   boost::system::error_code err;
 
@@ -114,6 +171,10 @@ void periodicDataReport(E2Sim *e2sim, int *timer, long seqNum, long *ric_req_id,
       */
       // payload = (char*) "{\"timestamp\":1602706183796,\"slice_id\":0,\"dl_bytes\":53431,\"dl_thr_mbps\":2.39,\"ratio_granted_req_prb\":0.02,\"slice_prb\":6,\"dl_pkts\":200}";
       out_socket.send_to(boost::asio::buffer(indication_request_buffer, indication_request_length), remote_endpoint_out, 0, err);
+      startUnsolicitedRICIndiListener(e2sim,requestorId);
+      std::chrono::seconds configured_sleep_duration(timer[0]);
+      std::this_thread::sleep_for(configured_sleep_duration);
+      continue; // TODO: delete code after this line
 
       fprintf(stderr, "Waiting for response from gnb...");
       std::chrono::milliseconds sleep_duration(500);
@@ -171,8 +232,8 @@ void periodicDataReport(E2Sim *e2sim, int *timer, long seqNum, long *ric_req_id,
     }
     */
 
-    std::chrono::seconds sleep_duration(timer[0]);
-    std::this_thread::sleep_for(sleep_duration);
+    //std::chrono::seconds sleep_duration(timer[0]);
+    //std::this_thread::sleep_for(sleep_duration);
   }
   // loop thread
   // if (report_data_nrt_ric) {
