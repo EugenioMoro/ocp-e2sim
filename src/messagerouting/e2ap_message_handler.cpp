@@ -25,7 +25,7 @@
 
 #include "encode_e2apv1.hpp"
 
-
+#include <stdexcept>
 #include <unistd.h>
 
 void e2ap_handle_sctp_data(int &socket_fd, sctp_buffer_t &data, bool xmlenc, E2Sim *e2sim)
